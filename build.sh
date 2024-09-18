@@ -3,5 +3,5 @@
 # 0.2.0 - added images
 # 0.2.1 - fixed bad date
 
-docker build . -t registry.field3.systems/ticker-rss:0.2.1
-docker push registry.field3.systems/ticker-rss:0.2.1
+docker build . -t 192.168.10.1:5000/ticker-rss:0.2.1
+docker push 192.168.10.1:5000/ticker-rss:0.2.1
