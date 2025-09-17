@@ -33,7 +33,7 @@ def scrape_blog(url):
 
 
     # Extract the content text
-    content = content_element.prettify()[5:-5]
+    content = content_element.prettify()[36:-20]
 
     title, date = extract_date_and_title(content_element.get_text(separator="\n"))
 
@@ -93,7 +93,8 @@ def get_post_urls(base_url):
 def generate_rss(posts):
     fg = FeedGenerator()
     fg.title('Oklahoma Mesonet Ticker')
-    fg.link(href='https://example.com', rel='alternate')
+    fg.link(href='https://ticker.mesonet.org/', rel='self')
+    fg.id('https://ticker.mesonet.org/')
     fg.description('Latest Ticker')
     fg.author({'name': 'Gary McManus', 'email': 'gmcmanus@mesonet.org'})
     fg.copyright('Copyright 2024 Oklahoma Climatological Survey')
@@ -107,9 +108,10 @@ def generate_rss(posts):
         fe = fg.add_entry()
         fe.title(post['title'])
         fe.author({'name': 'Gary McManus', 'email': 'gmcmanus@mesonet.org'})
-        fe.link(href=post['link'])
-        fe.content(post['content'], type='CDATA')
+        fe.link(href=post['link'], rel='self')
+        fe.content(post['content'], type='html')
         fe.pubDate(post['date'])
+        fe.id(post['link'])
 
         previous_title = post['title']
 
@@ -118,7 +120,7 @@ def generate_rss(posts):
     if not folder:
         folder = "./"
 
-    fg.rss_file(folder + 'blog_rss.xml')
+    fg.atom_file(folder + 'blog_rss.xml')
 
 while True:
     base_url = 'https://ticker.mesonet.org/select.php'
