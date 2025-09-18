@@ -1,17 +1,18 @@
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from feedgen.feed import FeedGenerator
 import requests
 from datetime import datetime, timedelta, timezone
 import re
 from time import sleep
 import os
+from typing import Optional, Dict, Any
 
 # Standard Central Time
 central_offset = timedelta(hours=-6)
 central_time = timezone(central_offset)
 
 # Function to scrape blog page
-def scrape_blog(url):
+def scrape_blog(url: str) -> Optional[Dict[str, Any]]:
     response = requests.get(url, headers={'User-Agent': 'ticker rss feed generator v0.x'})
     # set a user agent
     soup = BeautifulSoup(response.content, features="lxml")
@@ -19,17 +20,23 @@ def scrape_blog(url):
     # Find the content element
     content_element = soup.find('pre')
 
+    if content_element is None or not isinstance(content_element, Tag):
+        return None
+
     # convert their a tags to img
     a_tags = content_element.find_all('a')
 
     for a in a_tags:
-        img = soup.new_tag('img')
+        if isinstance(a, Tag):
+            img = soup.new_tag('img')
 
-        img['src'] = a['href']
-        img['alt'] = a.get_text()
-        img['style'] = ' display: block; margin-right: auto; margin-left: auto; width: 100%;' # just some stuff to get it to have its own space
+            href = a.get('href')
+            if href:
+                img['src'] = href
+            img['alt'] = a.get_text()
+            img['style'] = ' display: block; margin-right: auto; margin-left: auto; width: 100%;' # just some stuff to get it to have its own space
 
-        a.replace_with(img)
+            a.replace_with(img)
 
 
     # Extract the content text
@@ -49,7 +56,7 @@ def scrape_blog(url):
 
     return nextEntry
 
-def extract_date_and_title(text):
+def extract_date_and_title(text: str) -> tuple[Optional[str], Optional[datetime]]:
     # Regex pattern to match the date and title
     pattern = r'MESONET TICKER \.\.\. MESONET TICKER \.\.\. MESONET TICKER \.\.\. MESONET TICKER \.\.\.\n(?P<date>\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4})[^\n]*\n(?P<title>[^\n]*)\n'
     match = re.search(pattern, text, re.DOTALL)
@@ -68,7 +75,7 @@ def extract_date_and_title(text):
     else:
         return None, None
 
-def get_post_urls(base_url):
+def get_post_urls(base_url: str) -> list[str]:
     # Get today's date
     today = datetime.now()
     urls = []
@@ -90,7 +97,7 @@ def get_post_urls(base_url):
     return urls
 
 # Function to generate RSS feed
-def generate_rss(posts):
+def generate_rss(posts: list[Dict[str, Any]]) -> None:
     fg = FeedGenerator()
     fg.title('Oklahoma Mesonet Ticker')
     fg.link(href='https://ticker.mesonet.org/', rel='self')
@@ -134,7 +141,8 @@ while True:
 
         sleep(3)
 
-        all_posts.append(posts)
+        if posts is not None:
+            all_posts.append(posts)
     generate_rss(all_posts)
 
     sleep(3600) # one hour
