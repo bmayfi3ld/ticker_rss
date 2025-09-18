@@ -8,7 +8,9 @@ dependencies = [
     "beautifulsoup4==4.13.5",
     "feedgen==1.0.0",
     "requests==2.32.5.0",
-    "lxml==6.0.1"
+    "lxml==6.0.1",
+    "flask>=3.1.2",
+    "waitress>=3.0.2",
 ]
 
 [build-system]
@@ -19,6 +21,3 @@ build-backend = "hatchling.build"
 include = [
     "main.py",
 ]
-
-[tool.uv]
-dev-dependencies = []

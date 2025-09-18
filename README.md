@@ -1,83 +1,70 @@
 # Ticker RSS
 
-RSS feed generator for Oklahoma Mesonet Ticker.
+RSS feed generator and web server for Oklahoma Mesonet Ticker.
 
 ## Prerequisites
 
-- [uv](https://docs.astral.sh/uv/) - Fast Python package installer and resolver
-- [just](https://github.com/casey/just) - Command runner (optional but recommended)
-
-## Installation
-
-Install uv if you haven't already:
-
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
+- [uv](https://docs.astral.sh/uv/)
+- [just](https://github.com/casey/just)
 
 ## Setup
 
 Clone the repository and set up the project:
 
 ```bash
-git clone <repository-url>
-cd ticker_rss
 just setup
-```
-
-Or without just:
-
-```bash
-uv sync
 ```
 
 ## Usage
 
-### Running the application
+### Web Server Mode (Default)
 
-With just:
+Run the application with built-in web server:
+
 ```bash
 just run
 ```
 
-Or directly with uv:
-```bash
-uv run python main.py
-```
+This starts:
+- Background RSS scraper that updates every hour
+- Web server on `http://0.0.0.0:5000` serving the RSS feed
 
-### Managing dependencies
+#### Web Server Endpoints
 
-Add a new dependency:
-```bash
-just add package-name
-# or
-uv add package-name
-```
+- `/` - Main page with feed information
+- `/rss` - RSS feed (XML format)
+- `/status` - JSON status endpoint
+- `/download` - Download RSS file
 
-Remove a dependency:
+#### Custom Host/Port
+
 ```bash
-just remove package-name
-# or
-uv remove package-name
+FLASK_HOST=127.0.0.1 FLASK_PORT=8080 just run
 ```
 
 ### Environment Variables
 
 - `TICKER_DAYS` - Number of days to scrape (default: 30)
 - `RSS_FOLDER` - Output folder for the RSS file (default: "./")
+- `FLASK_HOST` - Web server host (default: "0.0.0.0")
+- `FLASK_PORT` - Web server port (default: 5000)
+- `DISABLE_FLASK` - Set to "true" to run scraper-only mode
+- `WAITRESS_THREADS` - Number of worker threads (default: 4)
+- `WAITRESS_CONNECTION_LIMIT` - Maximum simultaneous connections (default: 1000)
+- `WAITRESS_CLEANUP_INTERVAL` - Connection cleanup interval in seconds (default: 30)
+- `WAITRESS_CHANNEL_TIMEOUT` - Channel timeout in seconds (default: 120)
 
 ### Available Just Commands
 
-- `just setup` - Install dependencies and set up the project
-- `just run` - Run the main application
-- `just test` - Test the application (runs for 30 seconds with 3 days of data)
-- `just quick-test` - Quick test to verify dependencies are working
-- `just add PACKAGE` - Add a new dependency
-- `just remove PACKAGE` - Remove a dependency
-- `just info` - Show dependency tree
-- `just clean` - Clean up generated files
-- `just lock` - Update dependency lock file
-- `just build-push-container` - Build and push Docker container
+```
+build-push-container TAG # Build and push container
+clean                    # Clean up generated files
+quick-test               # Quick test to verify dependencies are working
+run                      # Run the web server (scraper + Flask server)
+setup                    # Install dependencies and set up the project with uv
+test                     # Test the web server (runs for a short time with limited days)
+```
+
 
 ## Docker
 
@@ -85,13 +72,13 @@ Build and run with Docker:
 
 ```bash
 docker build -t ticker-rss .
-docker run ticker-rss
+docker run -p 5000:5000 ticker-rss
 ```
 
 Or use the just command for building and pushing:
 
 ```bash
-just build-push-container
+just build-push-container v1.0.0
 ```
 
 ## Development
