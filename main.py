@@ -76,8 +76,8 @@ def extract_date_and_title(text: str) -> tuple[Optional[str], Optional[datetime]
         return None, None
 
 def get_post_urls(base_url: str) -> list[str]:
-    # Get today's date
-    today = datetime.now()
+    # Get today's date in Central Time
+    today = datetime.now(central_time)
     urls = []
     # Loop over the last days
     days = os.getenv("TICKER_DAYS")

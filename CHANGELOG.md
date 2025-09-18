@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2025-09-17
+### Changed
+- upgraded dependencies
+
+### Added
+- local serving of feed
+
+### Fixed
+- timezone bug causing articles to duplicate
+
 ## [0.3.0] - 2025-06-XX
 ### Changed
 - Migrated from pip to uv for dependency management
