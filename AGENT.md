@@ -1,6 +1,6 @@
 # AI Agent Instructions for ticker_rss Project
 
-This document provides context and instructions for AI agents (particularly Claude) working on this project.
+This document provides context and instructions for AI agents working on this project.
 
 ## Project Overview
 

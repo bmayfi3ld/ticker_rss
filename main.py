@@ -181,7 +181,7 @@ def index():
     file_exists = os.path.exists(rss_file_path)
 
     if file_exists:
-        return f'''
+        return '''
         <h1>Oklahoma Mesonet Ticker RSS</h1>
         <p>RSS feed is available at: <a href="/rss">/rss</a></p>
         <p>Status: <a href="/status">/status</a></p>
