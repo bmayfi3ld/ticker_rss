@@ -1,6 +1,8 @@
 # Ticker RSS
 
-RSS feed generator and web server for Oklahoma Mesonet Ticker.
+RSS feed generator and server for Oklahoma Mesonet Ticker.
+
+https://ticker.mesonet.org
 
 ## Prerequisites
 
@@ -73,12 +75,6 @@ Build and run with Docker:
 ```bash
 docker build -t ticker-rss .
 docker run -p 5000:5000 ticker-rss
-```
-
-Or use the just command for building and pushing:
-
-```bash
-just build-push-container v1.0.0
 ```
 
 ## Development
