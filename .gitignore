@@ -1,3 +1,4 @@
 .ropeproject
 .venv
 blog_rss.xml
+persisted_posts.json

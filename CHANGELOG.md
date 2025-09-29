@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1] - 2025-09-28
+### Fixed
+- added persistant store to keep track of articles, again trying to help with dropping and re-adding articles to the feed
+### Changed
+- random formatting things
+
 ## [0.4.0] - 2025-09-17
 ### Changed
 - upgraded dependencies
